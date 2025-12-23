@@ -251,14 +251,14 @@ Reports are automatically verified when:
 - [ ] Admin dashboard
 - [ ] API documentation
 
-### 📋 Planned
+### Planned
 - [ ] Mobile app (React Native)
 - [ ] Web dashboard (Next.js)
 - [ ] Advanced analytics
 - [ ] Neighborhood alerts
 - [ ] Broker verification system
 
-## 🧪 Testing the API
+## Testing the API
 
 ### Quick Test Script
 ```bash
