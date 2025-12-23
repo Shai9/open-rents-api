@@ -1,19 +1,43 @@
-# app/models/user.rb
 class User < ApplicationRecord
-  # Validations
   validates :phone_number, presence: true, uniqueness: true
   validates :trust_score, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 1 }
   validates :consistency_score, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 1 }
   
-  # Callbacks
   before_validation :format_phone_number
   before_create :generate_verification_code
+
+  has_many :reports, dependent: :destroy
   
-  # Scopes
+  def calculate_trust_score
+    score = verified? ? 0.6 : 0.3
+    
+    if reports_count > 0
+      report_bonus = Math.log10(reports_count + 1) * 0.1
+      score += report_bonus
+    end
+    
+    score += (consistency_score * 0.3)
+    
+    score.clamp(0.1, 1.0)
+  end
+  
+  def update_trust_score!
+    update!(trust_score: calculate_trust_score)
+  end
+  
+  def calculate_consistency_score
+    user_reports = reports.verified
+    return 0.5 if user_reports.empty?
+    
+    total_agreements = user_reports.sum(:agreements_count)
+    total_verifications = user_reports.sum { |r| r.agreements_count + r.disagreements_count }
+    
+    total_verifications.zero? ? 0.5 : (total_agreements.to_f / total_verifications)
+  end
+  
   scope :verified, -> { where.not(sms_verified_at: nil) }
   scope :trusted, ->(threshold = 0.7) { verified.where("trust_score >= ?", threshold) }
   
-  # Instance Methods
   def verified?
     sms_verified_at.present?
   end
@@ -32,10 +56,8 @@ class User < ApplicationRecord
   def format_phone_number
     return if phone_number.blank?
     
-    # Clean and format phone number (Kenya specific)
     cleaned = phone_number.gsub(/\D/, '')
     
-    # Convert to +254 format if it starts with 0 or 254
     if cleaned.start_with?('0')
       self.phone_number = "+254#{cleaned[1..]}"
     elsif cleaned.start_with?('254')
