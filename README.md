@@ -95,7 +95,7 @@ Response:
   "success": true,
   "data": {
     "status": "healthy",
-    "timestamp": "2024-01-15T12:00:00Z",
+    "timestamp": "2025-12-15T12:00:00Z",
     "environment": "development",
     "database": "connected",
     "neighborhoods_count": 10,
