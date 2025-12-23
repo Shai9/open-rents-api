@@ -18,7 +18,7 @@ OpenRents treats rental data as **signals with varying confidence levels**. Trus
 - **Community Verification**: Residents verify each other's reports
 - **Transparent Trust Scoring**: Users see exactly how confidence is calculated
 - **Nairobi-First Design**: Built for Kenya's SMS-first mobile culture
-- **Real Problems Solved**: Water reliability, estate-level security, generator noise
+- **Real Problems Solved**: Water reliability, estate-level security, noise levels
 
 ## Architecture
 
