@@ -49,7 +49,6 @@ class Neighborhood < ApplicationRecord
 private
 
 def dominant_value_for(report_type)
-  # Get the most common value for this report type
   reports.verified
          .by_type(report_type)
          .group(:value)

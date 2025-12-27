@@ -1,4 +1,3 @@
-# app/controllers/api/v1/reports_controller.rb
 module Api
   module V1
     class ReportsController < BaseController
@@ -12,13 +11,10 @@ module Api
       
       reports = reports.by_type(params[:report_type]) if params[:report_type]
       
-      # Filter by verification status
       reports = params[:verified] == 'true' ? reports.verified : reports if params[:verified].present?
       
-      # Order by most recent
       reports = reports.order(created_at: :desc)
       
-      # Pagination with Kaminari
       reports = reports.page(params[:page]).per(params[:per_page] || 20)
       
       render_success({
@@ -32,12 +28,10 @@ module Api
       })
     end
       
-      # GET /api/v1/reports/:id
       def show
         render_success(@report.to_api_json)
       end
       
-      # POST /api/v1/reports
       def create
         @report = current_user.reports.new(report_params)
         
@@ -48,7 +42,6 @@ module Api
         end
       end
       
-      # PATCH/PUT /api/v1/reports/:id
       def update
         if @report.update(report_params)
           render_success(@report.to_api_json)
@@ -57,7 +50,6 @@ module Api
         end
       end
       
-      # DELETE /api/v1/reports/:id
       def destroy
         @report.destroy
         render_success(message: "Report deleted successfully")
