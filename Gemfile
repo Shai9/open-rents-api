@@ -36,7 +36,7 @@ gem "thruster", require: false
 gem "rack-cors"  # UNCOMMENT THIS LINE
 
 # OpenRents specific gems
-gem 'twilio-ruby', '~> 5.75'
+gem 'twilio-ruby', '~> 7.9'
 gem 'sidekiq', '~> 7.2'
 gem 'redis', '~> 5.0'
 gem 'jsonapi-serializer', '~> 2.2'
