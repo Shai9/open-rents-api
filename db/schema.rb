@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_22_211827) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_23_213356) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -26,6 +26,25 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_22_211827) do
     t.index ["slug"], name: "index_neighborhoods_on_slug", unique: true
   end
 
+  create_table "reports", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "neighborhood_id", null: false
+    t.string "report_type", null: false
+    t.string "value", null: false
+    t.text "details"
+    t.decimal "confidence", precision: 3, scale: 2, default: "0.5"
+    t.integer "agreements_count", default: 0
+    t.integer "disagreements_count", default: 0
+    t.datetime "verified_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["neighborhood_id"], name: "index_reports_on_neighborhood_id"
+    t.index ["report_type", "neighborhood_id"], name: "index_reports_on_report_type_and_neighborhood_id"
+    t.index ["user_id", "neighborhood_id", "report_type"], name: "index_reports_on_user_neighborhood_type_unique", unique: true
+    t.index ["user_id"], name: "index_reports_on_user_id"
+    t.index ["verified_at"], name: "index_reports_on_verified_at"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "phone_number", null: false
     t.string "sms_verification_code"
@@ -38,4 +57,23 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_22_211827) do
     t.datetime "updated_at", null: false
     t.index ["phone_number"], name: "index_users_on_phone_number", unique: true
   end
+
+  create_table "verifications", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "report_id", null: false
+    t.boolean "agrees", null: false
+    t.text "comment"
+    t.decimal "weight", precision: 3, scale: 2, default: "1.0"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["report_id", "agrees"], name: "index_verifications_on_report_id_and_agrees"
+    t.index ["report_id"], name: "index_verifications_on_report_id"
+    t.index ["user_id", "report_id"], name: "index_verifications_on_user_id_and_report_id", unique: true
+    t.index ["user_id"], name: "index_verifications_on_user_id"
+  end
+
+  add_foreign_key "reports", "neighborhoods"
+  add_foreign_key "reports", "users"
+  add_foreign_key "verifications", "reports"
+  add_foreign_key "verifications", "users"
 end

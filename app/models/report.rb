@@ -33,6 +33,7 @@ class Report < ApplicationRecord
   validates :user_id, uniqueness: { scope: [:neighborhood_id, :report_type], 
                                    message: "can only submit one report per type per neighborhood" }
   
+  has_many :verifications, dependent: :destroy
 
   before_validation :set_default_confidence, on: :create
   after_create :update_user_report_count
@@ -99,6 +100,30 @@ class Report < ApplicationRecord
       updated_at: updated_at
     }
   end
+
+  def update_confidence!
+    new_confidence = calculate_confidence
+    update!(confidence: new_confidence) if confidence != new_confidence
+  
+    auto_verify_if_qualified
+  end
+
+def calculate_confidence
+  return user.trust_score if total_verifications == 0
+  
+  user_weight = 0.3
+  consensus_weight = 0.7
+  
+  (user.trust_score * user_weight) + (consensus_score * consensus_weight)
+end
+
+def auto_verify_if_qualified
+  return if verified?
+  return unless total_verifications >= 3
+  return unless consensus_score >= 0.7  
+  
+  verify!
+end
   
   private
   

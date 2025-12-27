@@ -30,17 +30,41 @@ class Neighborhood < ApplicationRecord
   end
   
   def recent_insights
-    report_types = Report::REPORT_TYPES.keys.map(&:to_s)
-    
-    report_types.map do |type|
-      {
-        type: type,
-        value: dominant_value_for(type),
-        confidence: confidence_for(type),
-        sample_size: reports.verified.by_type(type).count
-      }
-    end.compact
-  end
+      report_types = Report::REPORT_TYPES.keys.map(&:to_s)
+      
+      report_types.map do |type|
+        type_reports = reports.verified.by_type(type)
+        next if type_reports.empty?
+        
+        {
+          type: type,
+          value: dominant_value_for(type),
+          confidence: confidence_for(type),
+          sample_size: type_reports.count,
+          last_updated: type_reports.maximum(:updated_at)
+        }
+      end.compact
+    end
+
+private
+
+def dominant_value_for(report_type)
+  # Get the most common value for this report type
+  reports.verified
+         .by_type(report_type)
+         .group(:value)
+         .order('count_all DESC')
+         .count
+         .first
+         &.first || "No data"
+end
+
+def confidence_for(report_type)
+  reports.verified
+         .by_type(report_type)
+         .average(:confidence)
+         &.round(2) || 0.0
+end
   
   private
   

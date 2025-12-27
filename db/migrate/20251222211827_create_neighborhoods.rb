@@ -1,4 +1,4 @@
-class CreateNeighborhoods < ActiveRecord::Migration[7.1]
+class CreateNeighborhoods < ActiveRecord::Migration[8.0]
   def change
     create_table :neighborhoods do |t|
       t.string :name, null: false

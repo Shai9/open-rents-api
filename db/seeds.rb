@@ -10,7 +10,9 @@ neighborhoods = [
   { name: "Runda", county: "Nairobi", ward: "Runda" },
   { name: "South B", county: "Nairobi", ward: "South B" },
   { name: "South C", county: "Nairobi", ward: "South C" },
-  { name: "Langata", county: "Nairobi", ward: "Langata" }
+  { name: "Langata", county: "Nairobi", ward: "Langata" },
+  { name: "Kileleshwa", county: "Nairobi", ward: "Kileleshwa" },
+  { name: "Kilimani", county: "Nairobi", ward: "Kilimani" },
 ]
 
 neighborhoods.each do |neighborhood_data|
@@ -36,5 +38,76 @@ test_users.each do |user_data|
   
   puts "Created/Found user: #{user.phone_number} (Trust: #{user.trust_score})"
 end
+
+puts "Seeding sample reports..."
+
+user = User.first
+kileleshwa = Neighborhood.find_by(name: "Kileleshwa")
+kilimani = Neighborhood.find_by(name: "Kilimani")
+
+sample_reports = [
+  {
+    user: user,
+    neighborhood: kileleshwa,
+    report_type: "water_reliability",
+    value: "Good",
+    details: "Water available 5-6 days a week. Reliable schedule.",
+    confidence: 0.85
+  },
+  {
+    user: user,
+    neighborhood: kileleshwa,
+    report_type: "security",
+    value: "Safe",
+    details: "24/7 guards in most apartments. CCTV common.",
+    confidence: 0.82
+  },
+  {
+    user: user,
+    neighborhood: kileleshwa,
+    report_type: "noise_levels",
+    value: "Moderate",
+    details: "Quiet after 10 PM. Some generator noise during outages.",
+    confidence: 0.78
+  },
+  {
+    user: user,
+    neighborhood: kilimani,
+    report_type: "water_reliability",
+    value: "Fair",
+    details: "Water rationing during dry season.",
+    confidence: 0.75
+  },
+  {
+    user: user,
+    neighborhood: kilimani,
+    report_type: "internet_speed",
+    value: "Excellent",
+    details: "Fiber available from multiple providers.",
+    confidence: 0.92
+  }
+]
+
+sample_reports.each do |report_data|
+  report = Report.create!(report_data)
+  report.verify! 
+  
+  puts "Created report: #{report.report_type} for #{report.neighborhood.name}"
+  
+  if report.report_type == "water_reliability"
+    other_user = User.second
+    if other_user
+      Verification.create!(
+        user: other_user,
+        report: report,
+        agrees: true,
+        comment: "I confirm this is accurate"
+      )
+      puts "  Added verification from #{other_user.phone_number}"
+    end
+  end
+end
+
+puts "Sample reports seeded!"
 
 puts "Seeding complete!"
