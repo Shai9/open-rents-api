@@ -37,7 +37,7 @@ gem "rack-cors"  # UNCOMMENT THIS LINE
 
 # OpenRents specific gems
 gem 'twilio-ruby', '~> 5.75'
-gem 'sidekiq', '~> 7.2'
+gem 'sidekiq', '~> 8.1'
 gem 'redis', '~> 5.0'
 gem 'jsonapi-serializer', '~> 2.2'
 gem 'dotenv-rails', groups: [:development, :test]
