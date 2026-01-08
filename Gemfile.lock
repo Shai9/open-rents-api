@@ -115,7 +115,7 @@ GEM
     json (2.18.0)
     jsonapi-serializer (2.2.0)
       activesupport (>= 4.2)
-    jwt (2.10.2)
+    jwt (3.1.2)
       base64
     kamal (2.10.1)
       activesupport (>= 7.0)
@@ -174,17 +174,17 @@ GEM
       net-protocol
     net-ssh (7.3.0)
     nio4r (2.7.5)
-    nokogiri (1.18.10-aarch64-linux-gnu)
+    nokogiri (1.19.0-aarch64-linux-gnu)
       racc (~> 1.4)
-    nokogiri (1.18.10-aarch64-linux-musl)
+    nokogiri (1.19.0-aarch64-linux-musl)
       racc (~> 1.4)
-    nokogiri (1.18.10-arm-linux-gnu)
+    nokogiri (1.19.0-arm-linux-gnu)
       racc (~> 1.4)
-    nokogiri (1.18.10-arm-linux-musl)
+    nokogiri (1.19.0-arm-linux-musl)
       racc (~> 1.4)
-    nokogiri (1.18.10-x86_64-linux-gnu)
+    nokogiri (1.19.0-x86_64-linux-gnu)
       racc (~> 1.4)
-    nokogiri (1.18.10-x86_64-linux-musl)
+    nokogiri (1.19.0-x86_64-linux-musl)
       racc (~> 1.4)
     ostruct (0.6.3)
     parallel (1.27.0)
@@ -314,9 +314,9 @@ GEM
     thruster (0.1.17-x86_64-linux)
     timeout (0.6.0)
     tsort (0.2.0)
-    twilio-ruby (5.77.0)
+    twilio-ruby (7.9.1)
       faraday (>= 0.9, < 3.0)
-      jwt (>= 1.5, < 3.0)
+      jwt (>= 1.5, < 4.0)
       nokogiri (>= 1.6, < 2.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
@@ -358,7 +358,7 @@ DEPENDENCIES
   sidekiq (~> 7.2)
   solid_cache
   thruster
-  twilio-ruby (~> 5.75)
+  twilio-ruby (~> 7.9)
   tzinfo-data
 
 BUNDLED WITH
